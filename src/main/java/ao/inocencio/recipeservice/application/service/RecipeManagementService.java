@@ -1,8 +1,11 @@
 package ao.inocencio.recipeservice.application.service;
 
+import ao.inocencio.recipeservice.domain.exception.RecipeNotFoundExpeception;
 import ao.inocencio.recipeservice.domain.model.Recipe;
 import ao.inocencio.recipeservice.domain.ports.RecipeRepositoryPort;
 import ao.inocencio.recipeservice.domain.service.ExternalRecipeServicePort;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,5 +32,12 @@ public class RecipeManagementService {
     return newRecipes.stream()
             .map(recipeRepositoryPort::save)
             .toList();
+    }
+    public List<Recipe> getAllRecipes(){
+        return recipeRepositoryPort.findAll();
+    }
+    public Recipe getRecipeById(String id) {
+        return recipeRepositoryPort.findById(id)
+                .orElseThrow(() -> new RecipeNotFoundExpeception("Recipe not found with id: " + id));
     }
 }
