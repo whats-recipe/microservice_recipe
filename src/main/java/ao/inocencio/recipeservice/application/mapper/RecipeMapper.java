@@ -5,14 +5,12 @@ import ao.inocencio.recipeservice.domain.model.Recipe;
 import ao.inocencio.recipeservice.infrastruture.persistence.RecipeEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
-
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface RecipeMapper {
 
-    RecipeMapper INSTANCE = Mappers.getMapper(RecipeMapper.class);
+    // RecipeMapper INSTANCE = Mappers.getMapper(RecipeMapper.class);
 
     //Domain to DTO
     RecipeDTO toDTO(Recipe recipe);

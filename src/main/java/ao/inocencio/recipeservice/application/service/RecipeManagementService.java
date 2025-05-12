@@ -4,8 +4,6 @@ import ao.inocencio.recipeservice.domain.exception.RecipeNotFoundExpeception;
 import ao.inocencio.recipeservice.domain.model.Recipe;
 import ao.inocencio.recipeservice.domain.ports.RecipeRepositoryPort;
 import ao.inocencio.recipeservice.domain.service.ExternalRecipeServicePort;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

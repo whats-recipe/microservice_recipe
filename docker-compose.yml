@@ -1,0 +1,8 @@
+services:
+  postgresql:
+    image: bitnami/postgresql:17.0.0
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRESQL_DATABASE: recipe_service
+      POSTGRESQL_PASSWORD: 1234
