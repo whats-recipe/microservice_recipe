@@ -1,4 +1,10 @@
-package ao.inocencio.recipeservice.domain.service;
+package ao.inocencio.recipeservice.domain.exception;
 
-public interface DomainValidationException {
+public class DomainValidationException  extends RuntimeException {
+
+    public DomainValidationException(String message){
+        super(message);
+    }
+    
+
 }

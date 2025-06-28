@@ -6,3 +6,17 @@ services:
     environment:
       POSTGRESQL_DATABASE: recipe_service
       POSTGRESQL_PASSWORD: 1234
+    volumes:
+      - postgresql_data:/bitnami/postgresql
+  pgadmin:
+    image: dpage/pgadmin4
+    ports:
+      - "8080:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    depends_on:
+      - postgresql
+
+volumes:
+  postgresql_data:
