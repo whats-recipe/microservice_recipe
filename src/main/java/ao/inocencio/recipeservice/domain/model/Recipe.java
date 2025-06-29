@@ -18,7 +18,7 @@ public class Recipe {
     private Instant createdAt;
     private Instant updatedAt;
 
-    public Recipe(UUID id, String name, String description, Set<Ingredient> ingredients, String preparationMethod, String imageUrl) {
+    public Recipe(UUID id, String name, String description, Set<Ingredient> ingredients, String preparationMethod, String imageUrl, RecipeType type, Instant createdAt, Instant updateAt) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -45,6 +45,44 @@ public class Recipe {
          this.ingredients = new HashSet<>(newIngredients);
          this.updatedAt = Instant.now();
          validateState();
+    }
+
+    // Factory method to create new Recipes
+    public static Recipe createNew(String name, String description, Set<Ingredient> ingredients, String preparationMethod, String imageUrl, RecipeType type) {
+        if(name == null || name.isEmpty()) {
+            throw new DomainValidationException("Recipe name cannot be empty");
+        }
+        if (ingredients == null || ingredients.isEmpty()) {
+            throw new DomainValidationException("Recipe must have ingredients");
+        }
+        if (preparationMethod == null || preparationMethod.isBlank()) {
+            throw new DomainValidationException("Recipe preparation method cannot be empty"); 
+        }
+        return new Recipe(
+         UUID.randomUUID(),
+         name, 
+         description, 
+         ingredients, 
+         preparationMethod, 
+         imageUrl,
+         type,
+         Instant.now(),
+         Instant.now()
+        );  
+    }
+    // Method to update recipe details (Domain behavior)
+    public void updateDetails(String newName, String newDescription, String newPreparationMethod,
+                              String newImageUrl, RecipeType newType) {
+        if (newName == null || newName.isBlank()) {
+            throw new DomainValidationException("Recipe name cannot be empty during update");
+        }
+        this.name = newName;
+        this.description = newDescription;
+        this.preparationMethod = newPreparationMethod;
+        this.imageUrl = newImageUrl;
+        this.type = newType;
+        this.updatedAt = Instant.now();
+        validateState();
     }
 
     public UUID getId() {return id;}

@@ -1,4 +1,11 @@
 package ao.inocencio.recipeservice.domain.model;
 
-public class RecipeType {
+public enum RecipeType {
+    SAVORY,
+    SWEET,
+    AGRODOLCE,
+    VEGETARIAN,
+    VEGAN,
+    GLUTEN_FREE,
+    OTHER
 }
