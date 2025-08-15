@@ -2,6 +2,7 @@ package ao.inocencio.recipeservice.infrastruture.adapter.out.persistence.jpa;
 
 import java.time.Instant;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import ao.inocencio.recipeservice.domain.model.RecipeType;
@@ -9,6 +10,7 @@ import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;

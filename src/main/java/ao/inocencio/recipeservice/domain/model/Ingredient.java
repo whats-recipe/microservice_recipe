@@ -1,12 +1,16 @@
 package ao.inocencio.recipeservice.domain.model;
 
 import ao.inocencio.recipeservice.domain.exception.DomainValidationException;
+import jakarta.persistence.Embeddable;
 
 //Value Object: Identified by its attributes, immutable
+@Embeddable
 public class Ingredient {
     private String name;
     private String quantity;
 
+    protected Ingredient() {}
+    
     public Ingredient(String name, String quantity) {
         if(name == null || name.isBlank()) {
             throw new DomainValidationException("Ingredient name cannot be empty.");

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ao.inocencio.recipeservice.application.exception.RecipeNotFoundException;
@@ -22,7 +23,8 @@ import ao.inocencio.recipeservice.domain.model.Recipe;
 
 @Service
 public class RecipeService implements CreateRecipeUseCase, GetRecipeUseCase, UpdateRecipeUseCase, DeleteRecipeUseCase {
- private final RecipeRepository recipeRepository;
+    private final RecipeRepository recipeRepository;
+
  
  public RecipeService(RecipeRepository recipeRepository){
     this.recipeRepository=recipeRepository;

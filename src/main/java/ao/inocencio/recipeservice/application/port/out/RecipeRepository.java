@@ -4,10 +4,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
+
 import ao.inocencio.recipeservice.domain.model.Recipe;
 import ao.inocencio.recipeservice.domain.model.RecipeType;
-
-public interface RecipeRepository {
+@Repository
+public interface RecipeRepository extends JpaRepository <Recipe, UUID> {
     Recipe save(Recipe recipe);
     Optional<Recipe> findById(UUID id);
     List<Recipe> findAll();
