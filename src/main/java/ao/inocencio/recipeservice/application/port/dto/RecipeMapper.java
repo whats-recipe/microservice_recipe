@@ -3,6 +3,7 @@ package ao.inocencio.recipeservice.application.port.dto;
 import java.util.Set;
 
 import ao.inocencio.recipeservice.domain.model.Ingredient;
+import ao.inocencio.recipeservice.domain.model.Recipe;
     // Mapper for converting between domain models and DTOs
 public class RecipeMapper {
 
@@ -24,7 +25,7 @@ public class RecipeMapper {
     }
 
     // Add method to convert CreateRecipeCommand to Domain Recipe
-    public static ao.inocencio.recipeservice.domain.model.Recipe toDomainRecipe(CreateRecipeCommand command) {
+    public static Recipe toDomainRecipe(CreateRecipeCommand command) {
          Set<Ingredient> ingredients = new java.util.HashSet<>();
          for (Ingredient ingredient : command.ingredients()) { // Assuming Ingredient from domain model can be used directly
              ingredients.add(new Ingredient(ingredient.getName(), ingredient.getQuantity()));

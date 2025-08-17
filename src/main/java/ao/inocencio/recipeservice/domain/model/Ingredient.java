@@ -1,40 +1,60 @@
 package ao.inocencio.recipeservice.domain.model;
 
 import ao.inocencio.recipeservice.domain.exception.DomainValidationException;
-import jakarta.persistence.Embeddable;
+import jakarta.persistence.*;
+import lombok.Data;
 
-//Value Object: Identified by its attributes, immutable
-@Embeddable
+import java.util.Objects;
+import java.util.UUID;
+
+@Entity
+@Table(name = "ingredient")
+@Data
 public class Ingredient {
+
+    @Id
+    @GeneratedValue
+    private UUID id;
+
+    @Column(nullable = false)
     private String name;
+
     private String quantity;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "recipe_id", nullable = false)
+    private Recipe recipe;
+
     protected Ingredient() {}
-    
+
     public Ingredient(String name, String quantity) {
-        if(name == null || name.isBlank()) {
+        if (name == null || name.isBlank()) {
             throw new DomainValidationException("Ingredient name cannot be empty.");
         }
         this.name = name;
         this.quantity = quantity;
     }
-    public String getName() {
-        return name;
-    }
-    public String getQuantity(){
-        return quantity;
+
+    // Package-private setter (Recipe controla a associação)
+    void setRecipe(Recipe recipe) {
+        this.recipe = recipe;
     }
 
-    // Value Objects must override equals() and hashCode() for structural equality
+    /*public UUID getId() { return  id; }
+    public String getName() { return name; }
+    public String getQuantity() { return quantity; }
+    public Recipe getRecipe() { return recipe; } */
+
     @Override
-    public boolean equals(Object o){
+    public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Ingredient that = (Ingredient) o; 
-        return name.equals(that.name) && quantity.equals(that.quantity);      
+        if (!(o instanceof Ingredient)) return false;
+        Ingredient that = (Ingredient) o;
+        return Objects.equals(id, that.id);
     }
+
     @Override
     public int hashCode() {
-        return java.util.Objects.hash(name, quantity);
+        return Objects.hash(id);
     }
 }

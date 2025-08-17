@@ -32,15 +32,16 @@ public class RecipeService implements CreateRecipeUseCase, GetRecipeUseCase, Upd
 
  @Override
  public RecipeResponse createRecipe(CreateRecipeCommand command) {
-    try {
+   try {
         Recipe newRecipe = RecipeMapper.toDomainRecipe(command);
 
-        Recipe savedRecipe = recipeRepository.save(newRecipe);
+    
+    Recipe savedRecipe = recipeRepository.save(newRecipe);
         return RecipeMapper.toRecipeResponse(savedRecipe);
-}   catch (DomainValidationException e) {
-            throw new ao.inocencio.recipeservice.application.exception.InvalidRecipeDataException(e.getMessage());
-      }
+    } catch (DomainValidationException e) {
+        throw new ao.inocencio.recipeservice.application.exception.InvalidRecipeDataException(e.getMessage());
     }
+}
 
     @Override
     public RecipeResponse getRecipeById(String recipeId) {

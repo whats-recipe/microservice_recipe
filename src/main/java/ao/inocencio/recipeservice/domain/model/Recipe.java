@@ -2,21 +2,25 @@ package ao.inocencio.recipeservice.domain.model;
 
 import ao.inocencio.recipeservice.domain.exception.DomainValidationException;
 import jakarta.persistence.*;
-import java.time.Instant;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
+import java.time.Instant;
+import java.util.*;
 
 @Entity
+@Table(name = "recipe")
+@AllArgsConstructor
+@Data
 public class Recipe {
 
     @Id
+    @GeneratedValue
     private UUID id;
+
+    @Version
+    @Column(nullable = false)
+    private Long version;
 
     @Column(nullable = false)
     private String name;
@@ -24,10 +28,7 @@ public class Recipe {
     @Column(length = 2000)
     private String description;
 
-    @Embedded
-    @JdbcTypeCode(SqlTypes.JSON)
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "recipe_ingredients", joinColumns = @JoinColumn(name = "recipe_id"))
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<Ingredient> ingredients = new HashSet<>();
 
     @Column(nullable = false, length = 5000)
@@ -45,22 +46,22 @@ public class Recipe {
     @Column(nullable = false)
     private Instant updatedAt;
 
-    // JPA precisa do construtor padrão
-    protected Recipe() {}
+    public Recipe() {}
 
-    // Construtor privado para centralizar validação
     private Recipe(UUID id, String name, String description, Set<Ingredient> ingredients,
                    String preparationMethod, String imageUrl, RecipeType type,
                    Instant createdAt, Instant updatedAt) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.ingredients = new HashSet<>(ingredients);
         this.preparationMethod = preparationMethod;
         this.imageUrl = imageUrl;
         this.type = type;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        if (ingredients != null) {
+            ingredients.forEach(this::addIngredient);
+        }
         validateState();
     }
 
@@ -79,14 +80,12 @@ public class Recipe {
         }
     }
 
-    // Factory method para criar novas receitas
     public static Recipe createNew(String name, String description, Set<Ingredient> ingredients,
                                    String preparationMethod, String imageUrl, RecipeType type) {
         return new Recipe(UUID.randomUUID(), name, description, ingredients, preparationMethod,
-                          imageUrl, type, Instant.now(), Instant.now());
+                imageUrl, type, Instant.now(), Instant.now());
     }
 
-    // Atualizar detalhes da receita
     public void updateDetails(String newName, String newDescription, String newPreparationMethod,
                               String newImageUrl, RecipeType newType) {
         if (newName == null || newName.isBlank()) {
@@ -101,39 +100,30 @@ public class Recipe {
         validateState();
     }
 
-    // Atualizar ingredientes
     public void updateIngredients(Set<Ingredient> newIngredients) {
         if (newIngredients == null || newIngredients.isEmpty()) {
             throw new DomainValidationException("Recipe must contain ingredients.");
         }
-        this.ingredients = new HashSet<>(newIngredients);
+        this.ingredients.clear();
+        newIngredients.forEach(this::addIngredient);
         this.updatedAt = Instant.now();
         validateState();
     }
 
-    // Getters imutáveis
-    public UUID getId() { return id; }
+    public void addIngredient(Ingredient ingredient) {
+        ingredient.setRecipe(this);
+        this.ingredients.add(ingredient);
+    }
 
-    public String getName() { return name; }
-
-    public String getDescription() { return description; }
-
-    public Set<Ingredient> getIngredients() { return Collections.unmodifiableSet(ingredients); }
-
-    public String getPreparationMethod() { return preparationMethod; }
-
-    public String getImageUrl() { return imageUrl; }
-
-    public RecipeType getType() { return type; }
-
-    public Instant getCreatedAt() { return createdAt; }
-
-    public Instant getUpdatedAt() { return updatedAt; }
+    public void removeIngredient(Ingredient ingredient) {
+        this.ingredients.remove(ingredient);
+        ingredient.setRecipe(null);
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Recipe)) return false;
         Recipe recipe = (Recipe) o;
         return Objects.equals(id, recipe.id);
     }
