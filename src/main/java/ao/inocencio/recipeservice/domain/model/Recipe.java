@@ -82,7 +82,7 @@ public class Recipe {
 
     public static Recipe createNew(String name, String description, Set<Ingredient> ingredients,
                                    String preparationMethod, String imageUrl, RecipeType type) {
-        return new Recipe(UUID.randomUUID(), name, description, ingredients, preparationMethod,
+        return new Recipe(null, name, description, ingredients, preparationMethod,
                 imageUrl, type, Instant.now(), Instant.now());
     }
 
